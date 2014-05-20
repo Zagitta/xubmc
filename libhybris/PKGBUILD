@@ -1,0 +1,45 @@
+# This is an example PKGBUILD file. Use this as a start to creating your own,
+# and remove these comments. For more information, see 'man PKGBUILD'.
+# NOTE: Please fill out the license field for your package! If it is unknown,
+# then please put 'unknown'.
+
+# Maintainer: Simon Rasmussen <zetlon+aur@gmail.com>
+_gitname=libhybris
+pkgname=libhybris-git
+pkgver=20142005
+pkgrel=1
+pkgdesc="A library that allows to use bionic-based HW adaptations in glibc systems."
+arch=('armv7h')
+url="https://github.com/libhybris/libhybris"
+license=('APACHE')
+makedepends=('python2')
+provides=('libhybris')
+replaces=()
+backup=()
+options=()
+install=
+changelog=
+source=('git+https://github.com/libhybris/libhybris.git' 
+'https://storage.googleapis.com/git-repo-downloads/repo')
+noextract=()
+md5sums=('SKIP' 'ffebe6f20c7b48637f9e951195e0e2b6')
+prepare() {
+	mkdir ${srcdir}/android
+	mkdir ${srcdir}/headers
+	cd ${srcdir}/android
+	python2 ${srcdir}/repo init -q -u https://android.googlesource.com/platform/manifest -b android-4.2.2_r1.2
+	python2 ${srcdir}/repo sync -q hardware/libhardware hardware/libhardware_legacy system/core external/libnfc-nxp platform/build platform/bionic
+	cd ${srcdir}/${_gitname}/utils
+	./extract-headers.sh ${srcdir}/android ${srcdir}/headers
+}
+
+build() {
+	cd ${srcdir}/${_gitname}/hybris
+	sh autogen.sh --prefix=/usr --with-default-egl-platform=hwcomposer --with-android-headers=${srcdir}/headers
+}
+
+
+package() {
+	cd ${srcdir}/${_gitname}/hybris
+	make install
+}
