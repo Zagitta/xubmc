@@ -28,18 +28,21 @@ prepare() {
 	mkdir ${srcdir}/headers
 	cd ${srcdir}/android
 	python2 ${srcdir}/repo init -q -u https://github.com/hardkernel/android.git -b odroid_5410_master
-	python2 ${srcdir}/repo sync -q hardware/libhardware hardware/libhardware_legacy system/core external/libnfc-nxp build bionic
+	python2 ${srcdir}/repo sync -q hardware/libhardware hardware/libhardware_legacy system/core external/libnfc-nxp build bionic #vendor/samsung_slsi hardware/samsung_slsi/exynos hardware/samsung_slsi/exynos5 hardware/samsung_slsi/exynos5410 device/hardkernel/odroidxu device/hardkernel/proprietary
 	cd ${srcdir}/${_gitname}/utils
 	./extract-headers.sh ${srcdir}/android ${srcdir}/headers
+	#work around <log/log.h> not found
+	mv ${srcdir}/headers/android ${srcdir}/headers/log
 }
 
 build() {
 	cd ${srcdir}/${_gitname}/hybris
 	sh autogen.sh --prefix=/usr --with-default-egl-platform=hwcomposer --with-android-headers=${srcdir}/headers
+	make
 }
 
 
 package() {
 	cd ${srcdir}/${_gitname}/hybris
-	make install
+	make -j1 DESTDIR="$pkgdir/" install
 }
