@@ -31,8 +31,6 @@ prepare() {
 	python2 ${srcdir}/repo sync -q hardware/libhardware hardware/libhardware_legacy system/core external/libnfc-nxp build bionic #vendor/samsung_slsi hardware/samsung_slsi/exynos hardware/samsung_slsi/exynos5 hardware/samsung_slsi/exynos5410 device/hardkernel/odroidxu device/hardkernel/proprietary
 	cd ${srcdir}/${_gitname}/utils
 	./extract-headers.sh ${srcdir}/android ${srcdir}/headers
-	#work around <log/log.h> not found
-	mv ${srcdir}/headers/android ${srcdir}/headers/log
 }
 
 build() {
