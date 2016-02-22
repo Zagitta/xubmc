@@ -22,7 +22,7 @@ changelog=
 source=('git+https://github.com/libhybris/libhybris.git' 
 'https://storage.googleapis.com/git-repo-downloads/repo')
 noextract=()
-md5sums=('SKIP' 'ffebe6f20c7b48637f9e951195e0e2b6')
+sha1sums=('SKIP' 'da0514e484f74648a890c0467d61ca415379f791')
 prepare() {
 	mkdir ${srcdir}/android
 	mkdir ${srcdir}/headers
@@ -31,8 +31,6 @@ prepare() {
 	python2 ${srcdir}/repo sync -q hardware/libhardware hardware/libhardware_legacy system/core external/libnfc-nxp build bionic #vendor/samsung_slsi hardware/samsung_slsi/exynos hardware/samsung_slsi/exynos5 hardware/samsung_slsi/exynos5410 device/hardkernel/odroidxu device/hardkernel/proprietary
 	cd ${srcdir}/${_gitname}/utils
 	./extract-headers.sh ${srcdir}/android ${srcdir}/headers
-	#work around <log/log.h> not found
-	mv ${srcdir}/headers/android ${srcdir}/headers/log
 }
 
 build() {
